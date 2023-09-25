@@ -1,0 +1,13 @@
+version: '3.2'
+
+services:
+  extractor:
+    build:
+      context: text_extract_model
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./text_extract_model:/app
+    profiles:
+      - debug

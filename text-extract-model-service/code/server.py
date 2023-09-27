@@ -44,10 +44,11 @@ def extract_text_handler() -> Tuple[str, int]:
 
     relative_filepath = os.path.join(upload_folder, filename)
     img.save(relative_filepath)
-    try:
-        res =  extract(relative_filepath)
-        os.remove(relative_filepath)
-        return res
-    except ImageNotFoundException as e:
-        return e.message, 404
+
+    res =  extract(relative_filepath)
+    os.remove(relative_filepath)
+    return res
     
+@app.errorhandler(ImageNotFoundException)
+def handle_invalid_request_error(e: Exception):
+    return "No image found for this path", 400

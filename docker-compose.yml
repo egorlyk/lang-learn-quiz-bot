@@ -3,11 +3,24 @@ version: '3.2'
 services:
   extractor:
     build:
-      context: text_extract_model
+      context: text-extract-model-service
       dockerfile: Dockerfile
     ports:
       - "5000:5000"
     volumes:
-      - ./text_extract_model:/app
+      - ./text-extract-model-service:/app
+    profiles:
+      - debug
+  
+  generator:
+    build:
+      context: quiz-generator-service
+      dockerfile: Dockerfile
+    ports:
+      - "5050:5050"
+    volumes:
+      - ./quiz-generator-service:/app
+    env_file:
+    - .env
     profiles:
       - debug

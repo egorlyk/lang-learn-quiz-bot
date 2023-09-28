@@ -28,8 +28,8 @@ def allowed_file(filename) -> bool:
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/', methods=['POST'])
-def extract_text_handler() -> Tuple[str, int]:
+@app.route('/extract', methods=['POST'])
+def extract_text_handler() -> str:
     img = request.files.get("ext-img")
     if img is None:
         return "Send images with ext-img key name", 404

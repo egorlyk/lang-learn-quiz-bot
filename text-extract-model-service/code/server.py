@@ -32,7 +32,7 @@ def allowed_file(filename) -> bool:
 def extract_text_handler() -> str:
     img = request.files.get("ext-img")
     if img is None:
-        return "Send images with ext-img key name", 404
+        return "Send images with ext-img key name", 400
     
     filename = img.filename
     if not allowed_file(filename):
@@ -48,7 +48,3 @@ def extract_text_handler() -> str:
     res =  extract(relative_filepath)
     os.remove(relative_filepath)
     return res
-    
-@app.errorhandler(ImageNotFoundException)
-def handle_invalid_request_error(e: Exception):
-    return "No image found for this path", 400

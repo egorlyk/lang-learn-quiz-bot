@@ -36,17 +36,11 @@ public class ProcessController {
      */
     @PostMapping("/process")
     public List<QuestionDTO> process(@RequestParam("file") MultipartFile file, HttpServletResponse response){
-        try {
-            Optional<String> textOpt = extService.extractTextFromImg(file);
-            if(textOpt.isPresent()) {
-                String text = textOpt.get();
-                return quizGenService.generateQuiz(text).orElse(null);
-            }
-            return null;
-
-        } catch (IOException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return null;
+        Optional<String> textOpt = extService.extractTextFromImg(file);
+        if(textOpt.isPresent()) {
+            String text = textOpt.get();
+            return quizGenService.generateQuiz(text).orElse(null);
         }
+        return null;
     }
 }

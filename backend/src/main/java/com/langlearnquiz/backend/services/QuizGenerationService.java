@@ -1,9 +1,5 @@
 package com.langlearnquiz.backend.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.langlearnquiz.backend.dtos.QuestionDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +10,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,8 +48,7 @@ public class QuizGenerationService {
                     new ParameterizedTypeReference<>() {
                     });
 
-            Optional<List<QuestionDTO>> opt = Optional.ofNullable(response.getBody());
-            return opt;
+            return Optional.ofNullable(response.getBody());
         } catch (RestClientException e) {
             System.out.println(e.getMessage());
             return Optional.empty();

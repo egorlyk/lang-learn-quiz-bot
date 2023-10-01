@@ -9,6 +9,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientResponseException;
 
+import java.net.ConnectException;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler({EmptyImageException.class, EmptyImageFilenameException.class, NotAllowedFileExtensionException.class})
@@ -23,5 +25,12 @@ public class GlobalExceptionHandler {
         ErrorDTO errorDTO = new ErrorDTO(e, (HttpStatus) e.getStatusCode());
 
         return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConnectException.class)
+    public ResponseEntity<ErrorDTO> handleConnectionExceptions(ConnectException e) {
+        ErrorDTO errorDTO = new ErrorDTO(e, HttpStatus.BAD_GATEWAY);
+
+        return new ResponseEntity<>(errorDTO, HttpStatus.BAD_GATEWAY);
     }
 }

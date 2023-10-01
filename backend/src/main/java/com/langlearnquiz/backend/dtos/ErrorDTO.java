@@ -12,12 +12,12 @@ import java.util.Date;
 @NoArgsConstructor
 public class ErrorDTO {
     private String message;
-    private HttpStatus statusCode;
+    private int statusCode;
     private Date date;
 
-    public ErrorDTO(RuntimeException e, HttpStatus statusCode){
+    public ErrorDTO(Exception e, HttpStatus statusCode){
         message = e.getMessage();
-        this.statusCode = statusCode;
+        this.statusCode = statusCode.value();
         date = new Date();
     }
 }

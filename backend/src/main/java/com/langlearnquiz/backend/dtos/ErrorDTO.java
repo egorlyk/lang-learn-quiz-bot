@@ -20,4 +20,10 @@ public class ErrorDTO {
         this.statusCode = statusCode.value();
         date = new Date();
     }
+
+    public ErrorDTO(String reason, HttpStatus statusCode){
+        message = reason;
+        this.statusCode = statusCode.value();
+        date = new Date();
+    }
 }

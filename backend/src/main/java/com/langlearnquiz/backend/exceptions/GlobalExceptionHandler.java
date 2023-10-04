@@ -1,12 +1,17 @@
 package com.langlearnquiz.backend.exceptions;
 
 import com.langlearnquiz.backend.dtos.ErrorDTO;
+import com.langlearnquiz.backend.exceptions.image.AbstractFileException;
+import com.langlearnquiz.backend.exceptions.image.EmptyImageException;
+import com.langlearnquiz.backend.exceptions.image.EmptyImageFilenameException;
+import com.langlearnquiz.backend.exceptions.image.NotAllowedFileExtensionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestClientResponseException;
 
 import java.net.ConnectException;
@@ -20,7 +25,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({HttpClientErrorException.class, HttpServerErrorException.class})
+    @ExceptionHandler({RestClientResponseException.class})
     public ResponseEntity<ErrorDTO> handleRestClientExceptions(RestClientResponseException e) {
         ErrorDTO errorDTO = new ErrorDTO(e, (HttpStatus) e.getStatusCode());
 
@@ -29,7 +34,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConnectException.class)
     public ResponseEntity<ErrorDTO> handleConnectionExceptions(ConnectException e) {
-        ErrorDTO errorDTO = new ErrorDTO(e, HttpStatus.BAD_GATEWAY);
+        ErrorDTO errorDTO = new ErrorDTO(e.getMessage(), HttpStatus.BAD_GATEWAY);
 
         return new ResponseEntity<>(errorDTO, HttpStatus.BAD_GATEWAY);
     }

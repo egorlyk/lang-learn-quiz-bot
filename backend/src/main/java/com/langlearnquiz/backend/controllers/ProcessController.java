@@ -1,10 +1,10 @@
 package com.langlearnquiz.backend.controllers;
 
 
+import com.langlearnquiz.backend.dtos.ErrorDTO;
 import com.langlearnquiz.backend.dtos.QuestionDTO;
 import com.langlearnquiz.backend.services.QuizGenerationService;
 import com.langlearnquiz.backend.services.TextExtractionService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,17 +29,13 @@ public class ProcessController {
      * representing quiz questions and answers.
      *
      * @param file The uploaded file containing text to be processed.
-     * @param response The HTTP servlet response used to set the HTTP status code in case of an error.
      * @return A list of {@link QuestionDTO} objects representing quiz questions and answers, or null
      *         if there is an error during processing.
      */
     @PostMapping("/process")
-    public List<QuestionDTO> process(@RequestParam("file") MultipartFile file, HttpServletResponse response){
-        Optional<String> textOpt = extService.extractTextFromImg(file);
-        if(textOpt.isPresent()) {
-            String text = textOpt.get();
-            return quizGenService.generateQuiz(text).orElse(null);
-        }
-        return null;
+    public List<QuestionDTO> process(@RequestParam("file") MultipartFile file){
+
+        String textOpt = extService.extractTextFromImg(file);
+        return quizGenService.generateQuiz(textOpt);
     }
 }

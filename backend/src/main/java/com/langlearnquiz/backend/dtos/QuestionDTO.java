@@ -10,6 +10,7 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 public class QuestionDTO {
     private String question;
     private List<String> answers;

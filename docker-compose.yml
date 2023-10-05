@@ -9,6 +9,8 @@ services:
       - "5000:5000"
     volumes:
       - ./text-extract-model-service:/app
+    networks:
+      - net
     profiles:
       - debug
   
@@ -22,6 +24,19 @@ services:
       - ./quiz-generator-service:/app
     env_file:
     - .env
+    networks:
+      - net
+    profiles:
+      - debug
+  
+  backend-debug:
+    build:
+      context: backend
+      dockerfile: debug.Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - net
     profiles:
       - debug
   
@@ -35,3 +50,7 @@ services:
     - .env
     profiles:
       - test
+
+networks:
+  net:
+    driver: bridge

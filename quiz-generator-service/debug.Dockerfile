@@ -9,6 +9,7 @@ RUN pip install --upgrade pip && \
 ENV FLASK_APP=/app/code/server.py
 ENV FLASK_RUN_HOST=0.0.0.0
 ENV FLASK_RUN_PORT=5050
+ENV PYTHONPATH=$pwd:$PYTHON
 EXPOSE 5050
 
 CMD ["flask", "run"]

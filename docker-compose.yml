@@ -1,10 +1,10 @@
 version: '3.2'
 
 services:
-  extractor:
+  extractor-debug:
     build:
       context: text-extract-model-service
-      dockerfile: Dockerfile
+      dockerfile: debug.Dockerfile
     ports:
       - "5000:5000"
     volumes:
@@ -12,10 +12,10 @@ services:
     profiles:
       - debug
   
-  generator:
+  generator-debug:
     build:
       context: quiz-generator-service
-      dockerfile: Dockerfile
+      dockerfile: debug.Dockerfile
     ports:
       - "5050:5050"
     volumes:
@@ -24,3 +24,14 @@ services:
     - .env
     profiles:
       - debug
+  
+  generator-test:
+    build:
+      context: quiz-generator-service
+      dockerfile: test.Dockerfile
+    volumes:
+      - ./quiz-generator-service:/app
+    env_file:
+    - .env
+    profiles:
+      - test

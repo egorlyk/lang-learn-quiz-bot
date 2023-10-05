@@ -42,8 +42,13 @@ def rescale_img(img: cv2.typing.MatLike, dpi:int=300) -> cv2.typing.MatLike:
 
     Returns:
         cv2.typing.MatLike: Rescaled image
+    
+    Raises:
+        ImageNotFoundException: If the specified image file does not exist or cannot be loaded.
     """
-
+    if img is None:
+        raise ImageNotFoundException
+    
     height, width = img.shape[:2]
     new_height = int((dpi / float(height)) * height)
     new_width = int((dpi / float(height)) * width)

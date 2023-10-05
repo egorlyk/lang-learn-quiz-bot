@@ -13,7 +13,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;

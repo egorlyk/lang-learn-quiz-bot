@@ -19,7 +19,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -60,14 +59,13 @@ class QuizGenerationServiceUnitTest {
         String text = "Some text to the service";
         String generatorServiceURL = "http://localhost:5050/";
         URI generatorServiceURI = new URL(generatorServiceURL).toURI();
-        QuestionDTO question = new QuestionDTO("Some question",
+        QuestionDTO expectedResponse = new QuestionDTO("Some question",
                 List.of("a1", "a2", "a3"), 1, "Valuable reason");
-        List<QuestionDTO> response = List.of(question);
 
-        when(restTemplate.exchange(eq(generatorServiceURI), eq(HttpMethod.POST), any(HttpEntity.class),
-                eq(new ParameterizedTypeReference<List<QuestionDTO>>() {}))).thenReturn(ResponseEntity.ok(response));
+        when(restTemplate.postForEntity(eq(generatorServiceURI), any(HttpEntity.class), eq(QuestionDTO.class)))
+                .thenReturn(ResponseEntity.ok(expectedResponse));
 
         assertThat(qgService.generateQuiz(text, generatorServiceURL, "", restTemplate))
-                .isEqualTo(response);
+                .isEqualTo(expectedResponse);
     }
 }

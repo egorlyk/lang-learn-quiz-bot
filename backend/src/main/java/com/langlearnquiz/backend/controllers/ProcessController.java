@@ -1,7 +1,6 @@
 package com.langlearnquiz.backend.controllers;
 
 
-import com.langlearnquiz.backend.dtos.ErrorDTO;
 import com.langlearnquiz.backend.dtos.QuestionDTO;
 import com.langlearnquiz.backend.services.QuizGenerationService;
 import com.langlearnquiz.backend.services.TextExtractionService;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class ProcessController {
@@ -33,7 +31,7 @@ public class ProcessController {
      *         if there is an error during processing.
      */
     @PostMapping("/process")
-    public List<QuestionDTO> process(@RequestParam("file") MultipartFile file){
+    public QuestionDTO process(@RequestParam("file") MultipartFile file){
 
         String textOpt = extService.extractTextFromImg(file);
         return quizGenService.generateQuiz(textOpt);

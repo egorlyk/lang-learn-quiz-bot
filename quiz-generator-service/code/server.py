@@ -1,6 +1,7 @@
 import openai
 from flask import Flask, request
-from utils.generator_model_utils import get_response_from_model
+from code.utils.generator_model_utils import *
+from code.exceptions.openai_exceptions import InvalidTextOnImageException
 
 app = Flask(__name__)
 
@@ -12,7 +13,9 @@ def generator_model_handler():
     if not message:
         return "The message is missing in the body", 400
     
-    return get_response_from_model(message)
+    topic = get_topic_from_model(message)
+
+    return get_questions_from_model(topic)
 
 @app.errorhandler(openai.error.RateLimitError)
 def handle_rate_limit_error(e: Exception):
@@ -25,3 +28,7 @@ def handle_invalid_request_error(e: Exception):
 @app.errorhandler(openai.error.OpenAIError)
 def handle_api_error(e: openai.error.OpenAIError):
     return e.message, e.http_status
+
+@app.errorhandler(InvalidTextOnImageException)
+def handle_api_error(e: InvalidTextOnImageException):
+    return e.message, 400

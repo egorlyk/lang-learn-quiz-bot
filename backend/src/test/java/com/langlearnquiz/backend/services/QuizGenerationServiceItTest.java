@@ -8,16 +8,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -35,15 +31,12 @@ public class QuizGenerationServiceItTest {
     QuizGenerationService qgService;
 
     @Test
-    void properTextShouldReturnProperAnser() {
+    void properTextShouldReturnProperAnswer() {
         String inputText = "Some text";
-        QuestionDTO question = new QuestionDTO("Some question",
+        QuestionDTO expectedResponse = new QuestionDTO("Some question",
                 List.of("a1", "a2", "a3"), 1, "Valuable reason");
-        List<QuestionDTO> expectedResponse = List.of(question);
 
-
-        when(restTemplate.exchange(any(URI.class), eq(HttpMethod.POST), any(HttpEntity.class),
-                eq(new ParameterizedTypeReference<List<QuestionDTO>>() {})))
+        when(restTemplate.postForEntity(any(URI.class), any(HttpEntity.class), eq(QuestionDTO.class)))
                 .thenReturn(ResponseEntity.ok(expectedResponse));
 
         assertThat(qgService.generateQuiz(inputText)).isEqualTo(expectedResponse);

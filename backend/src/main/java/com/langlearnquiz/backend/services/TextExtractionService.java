@@ -4,6 +4,8 @@ import com.langlearnquiz.backend.exceptions.InvalidServiceURLException;
 import com.langlearnquiz.backend.exceptions.image.EmptyImageException;
 import com.langlearnquiz.backend.exceptions.image.EmptyImageFilenameException;
 import com.langlearnquiz.backend.exceptions.image.NotAllowedFileExtensionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -33,6 +35,8 @@ public class TextExtractionService {
     private RestTemplate restTemplate;
 
     private final List<String> ALLOWED_FILE_EXTENSIONS = List.of("png", "jpg", "jpeg");
+
+    Logger log = LoggerFactory.getLogger(TextExtractionService.class);
 
     /**
      * Extract text content from an image using an external service.
@@ -93,10 +97,21 @@ public class TextExtractionService {
 
         try{
             URI serviceUri = new URL(extractorServiceUrl).toURI();
-            return restTemplate.postForEntity(serviceUri, requestEntity, String.class).getBody();
+            String response = restTemplate.postForEntity(serviceUri, requestEntity, String.class).getBody();
+
+            if(log.isDebugEnabled()) {
+                log.debug("Text:\n" + getStringSubstringCut(response, 200));
+                log.debug("Text length: " + response.length() + " symbols");
+            }
+            return response;
         } catch (MalformedURLException | URISyntaxException e) {
             throw new InvalidServiceURLException("Invalid Service URL");
         }
+    }
 
+    private String getStringSubstringCut(String string, int responseLength) {
+        return string.length() <= responseLength ? string: string.substring(0, responseLength/2) +
+                "\n...\n" +
+                string.substring(string.length() - responseLength/2);
     }
 }

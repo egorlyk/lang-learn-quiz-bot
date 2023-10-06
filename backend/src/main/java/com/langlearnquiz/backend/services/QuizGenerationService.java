@@ -3,10 +3,14 @@ package com.langlearnquiz.backend.services;
 import com.langlearnquiz.backend.dtos.QuestionDTO;
 import com.langlearnquiz.backend.exceptions.InvalidServiceURLException;
 import com.langlearnquiz.backend.exceptions.text.EmptyTextException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -27,6 +31,8 @@ public class QuizGenerationService {
     String generatorServiceUrl;
     @Autowired
     RestTemplate restTemplate;
+
+    Logger log = LoggerFactory.getLogger(QuizGenerationService.class);
 
     /**
      * Generates a quiz based on the provided text by making a POST request to a generator service.
@@ -72,7 +78,11 @@ public class QuizGenerationService {
             ResponseEntity<QuestionDTO> response =
                     restTemplate.postForEntity(serviceUri, requestEntity, QuestionDTO.class);
 
-            return response.getBody();
+            QuestionDTO responseBody = response.getBody();
+            if(log.isDebugEnabled()) {
+                log.debug(responseBody.toString());
+            }
+            return responseBody;
         }
         catch (MalformedURLException | URISyntaxException e) {
             throw new InvalidServiceURLException("Invalid Service URL");

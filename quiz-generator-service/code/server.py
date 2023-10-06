@@ -27,7 +27,7 @@ def handle_invalid_request_error(e: Exception):
 
 @app.errorhandler(openai.error.OpenAIError)
 def handle_api_error(e: openai.error.OpenAIError):
-    return e.message, e.http_status
+    return e, e.http_status
 
 @app.errorhandler(InvalidTextOnImageException)
 def handle_api_error(e: InvalidTextOnImageException):

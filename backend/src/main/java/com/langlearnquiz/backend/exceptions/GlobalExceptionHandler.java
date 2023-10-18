@@ -1,6 +1,6 @@
 package com.langlearnquiz.backend.exceptions;
 
-import com.langlearnquiz.backend.dtos.ErrorDTO;
+import com.langlearnquiz.backend.dto.ErrorDTO;
 import com.langlearnquiz.backend.exceptions.image.AbstractFileException;
 import com.langlearnquiz.backend.exceptions.image.EmptyImageException;
 import com.langlearnquiz.backend.exceptions.image.EmptyImageFilenameException;
@@ -37,5 +37,12 @@ public class GlobalExceptionHandler {
         ErrorDTO errorDTO = new ErrorDTO(e.getMessage(), HttpStatus.BAD_GATEWAY);
         log.error(e.getMessage());
         return new ResponseEntity<>(errorDTO, HttpStatus.BAD_GATEWAY);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorDTO> handleUserNotFoundExceptions(UserNotFoundException e){
+        ErrorDTO errorDTO = new ErrorDTO(e.getMessage(), HttpStatus.NOT_FOUND);
+        log.error(e.getMessage());
+        return new ResponseEntity<>(errorDTO, HttpStatus.NOT_FOUND);
     }
 }

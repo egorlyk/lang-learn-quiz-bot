@@ -2,7 +2,7 @@ package com.langlearnquiz.backend.controllers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.langlearnquiz.backend.dtos.QuestionDTO;
+import com.langlearnquiz.backend.dto.QuestionDTO;
 import com.langlearnquiz.backend.services.QuizGenerationService;
 import com.langlearnquiz.backend.services.TextExtractionService;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-FROM gradle:8.3.0-jdk17 as build
+FROM gradle:8.3.0-jdk17 as backend
 WORKDIR /app
 
 # Copy the Gradle build files (e.g., build.gradle and settings.gradle)

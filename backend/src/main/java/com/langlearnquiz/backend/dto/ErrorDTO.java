@@ -1,4 +1,4 @@
-package com.langlearnquiz.backend.dtos;
+package com.langlearnquiz.backend.dto;
 
 import lombok.*;
 import org.springframework.http.HttpStatus;

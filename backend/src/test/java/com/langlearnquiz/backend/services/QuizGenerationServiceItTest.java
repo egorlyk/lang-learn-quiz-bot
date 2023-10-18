@@ -1,6 +1,6 @@
 package com.langlearnquiz.backend.services;
 
-import com.langlearnquiz.backend.dtos.QuestionDTO;
+import com.langlearnquiz.backend.dto.QuestionDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

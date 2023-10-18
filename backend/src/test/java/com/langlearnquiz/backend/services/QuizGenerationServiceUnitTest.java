@@ -1,6 +1,6 @@
 package com.langlearnquiz.backend.services;
 
-import com.langlearnquiz.backend.dtos.QuestionDTO;
+import com.langlearnquiz.backend.dto.QuestionDTO;
 import com.langlearnquiz.backend.exceptions.InvalidServiceURLException;
 import com.langlearnquiz.backend.exceptions.text.EmptyTextException;
 import org.junit.jupiter.api.Test;
@@ -8,9 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 

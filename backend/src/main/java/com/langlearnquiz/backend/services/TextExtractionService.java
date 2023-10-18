@@ -84,7 +84,6 @@ public class TextExtractionService {
             throw new NotAllowedFileExtensionException("File extension is not allowed. Use only .jpg, .jpeg or .png");
         }
 
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 

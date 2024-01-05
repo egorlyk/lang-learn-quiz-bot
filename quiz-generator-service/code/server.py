@@ -1,45 +1,30 @@
-import sys
-
 from flask import Flask, request
+from marshmallow import ValidationError
 
-from code.exceptions.openai_exceptions import InvalidTextOnImageException
+from code.models.question import QuestionValidator
+from code.models.text import ImageTextModel, ImageTextValidator
+from code.models.topic import TopicValidator
 from code.utils.generator_model_utils import *
 
 app = Flask(__name__)
 
 
 @app.route('/topic', methods=['POST'])
-def get_topic_handler():
-    data = request.get_json()
-    message = str(data.get('message'))
+def generate_topic_handler() -> TopicModel:
+    data: ImageTextModel = ImageTextValidator().load(request.get_json())
 
-    if not message:
-        return "The message is missing in the body", 400
-
-    response = get_topic_from_model(message)
+    response = get_topic_from_model(data.text)
     print(f"Topic service response = {response}", file=sys.stderr)
     return response
 
 
-@app.route('/generate', methods=['POST'])
-def generate_question_handler():
-    data = request.get_json()
-    topic = str(data.get('topic'))
+@app.route('/question', methods=['POST'])
+def generate_question_handler() -> QuestionModel:
+    data: TopicModel = TopicValidator().load(request.get_json())
 
-    if not topic:
-        return "The topic is missing in the body", 400
-
-    return get_questions_from_model(topic)
-
-
-@app.errorhandler(openai.error.RateLimitError)
-def handle_rate_limit_error(e: Exception):
-    return "You exceeded your current quota, please check your plan and billing details", 429
-
-
-@app.errorhandler(openai.error.InvalidRequestError)
-def handle_invalid_request_error(e: Exception):
-    return "This is not a chat model and thus not supported in the v1/chat/completions endpoint", 429
+    response = get_questions_from_model(data.topic)
+    print(f"Question service response = {response}", file=sys.stderr)
+    return response
 
 
 @app.errorhandler(openai.error.OpenAIError)
@@ -47,6 +32,6 @@ def handle_api_error(e: openai.error.OpenAIError):
     return e, e.http_status
 
 
-@app.errorhandler(InvalidTextOnImageException)
-def handle_api_error(e: InvalidTextOnImageException):
-    return e.message, 400
+@app.errorhandler(ValidationError)
+def handle_api_error(e: ValidationError):
+    return e.messages, 400

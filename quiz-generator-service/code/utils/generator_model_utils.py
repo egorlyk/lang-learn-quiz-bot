@@ -1,16 +1,18 @@
 import json
 import os
-import random
 import sys
 from typing import List
 
 import openai
+
 from code.exceptions.openai_exceptions import MessageIsEmptyException, InvalidTextOnImageException
+from code.models.question import QuestionModel
+from code.models.topic import TopicModel
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
-def get_questions_from_model(message: str) -> dict:
+def get_questions_from_model(message: str) -> QuestionModel:
     """
     Get a response from the GPT-x model based on user input.
 
@@ -75,10 +77,10 @@ def get_questions_from_model(message: str) -> dict:
 
     response = get_response_from_model(message, system_helper_message, functions, temperature)
 
-    return response
+    return QuestionModel(**response)
 
 
-def get_topic_from_model(message: str) -> str:
+def get_topic_from_model(message: str) -> TopicModel:
     """
     Get a response from the GPT-x model based on user input.
 
@@ -138,7 +140,7 @@ def get_topic_from_model(message: str) -> str:
     temperature = 0.2
     response = get_response_from_model(message, system_helper_message, functions, temperature)
 
-    return response['topic']
+    return TopicModel(**response)
 
 
 def get_response_from_model(message: str, system_helper_message: str,
@@ -204,7 +206,7 @@ def get_response_from_model(message: str, system_helper_message: str,
         messages=
         [
                 {"role": "assistant", "content": system_helper_message},
-                {"role": "user", "content": message }
+                {"role": "user", "content": message}
         ],
         max_tokens=max_tokens,
         temperature=temperature,

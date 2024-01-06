@@ -1,50 +1,33 @@
-import os
-from typing import Tuple
-
 from flask import Flask, request
 
-from utils.text_extract_model import extract
-from exceptions.image_exceptions import ImageNotFoundException
+from code.exceptions.file_exceptions import FileValidationException, RequiredFileNotProvidedException
+from code.models.text_model import TextModel
+from code.utils.file_util import FileUtil
+from code.utils.text_extract_util import extract
 
 app = Flask(__name__)
 
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
-
-app.config.update(
-    UPLOAD_FOLDER = 'samples',
-)
-
-def allowed_file(filename) -> bool:
-    """
-    Checks if a given filename has an allowed file extension.
-
-    Args:
-        filename (str): The filename to be checked.
-
-    Returns:
-        bool: True if the filename has an allowed extension; False otherwise.
-    """
-    
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/extract', methods=['POST'])
-def extract_text_handler() -> str:
-    img = request.files.get("ext-img")
-    if img is None:
-        return "Send images with ext-img key name", 400
-    
-    filename = img.filename
-    if not allowed_file(filename):
-        return "The file extension isn't correct. Use only .png, .jpg or .jpeg", 415
-    
-    upload_folder = app.config['UPLOAD_FOLDER']
-    if not os.path.exists(upload_folder):
-        os.mkdir(upload_folder)
+def extract_text_handler() -> TextModel:
+    file = request.files.get("ext-img")
+    if file is None:
+        raise RequiredFileNotProvidedException("Send images with ext-img key name")
 
-    relative_filepath = os.path.join(upload_folder, filename)
-    img.save(relative_filepath)
+    file_util = FileUtil(file)
+    relative_filepath = file_util.save()
 
-    res =  extract(relative_filepath)
-    os.remove(relative_filepath)
+    res = extract(relative_filepath)
+    file_util.remove_file()
+
     return res
+
+
+@app.errorhandler(FileValidationException)
+def handle_api_error(e: FileValidationException):
+    return e.message, 415
+
+
+@app.errorhandler(RequiredFileNotProvidedException)
+def handle_api_error(e: RequiredFileNotProvidedException):
+    return e.message, 400

@@ -30,15 +30,15 @@ services:
       - debug
   
   backend-debug:
-    build:
-      context: backend
-      dockerfile: debug.Dockerfile
+    image: lang-learn-quiz-bot-backend:latest
     ports:
       - "8080:8080"
     networks:
       - net
     profiles:
       - debug
+    environment:
+      SPRING_PROFILES_ACTIVE: debug
     depends_on:
       generator-debug:
         condition: service_started      
@@ -46,8 +46,24 @@ services:
         condition: service_started
       redis:
         condition: service_started
-  
-  
+
+  frontend-debug:
+    image: lang-learn-quiz-bot-frontend:latest
+    env_file:
+    - .env
+    networks:
+      - net
+    profiles:
+      - debug
+    environment:
+      SPRING_PROFILES_ACTIVE: debug
+      TG_BOT_API: ${TG_BOT_API}
+    depends_on:
+      backend-debug:
+        condition: service_started
+
+
+
   generator-test:
     build:
       context: quiz-generator-service
@@ -55,23 +71,9 @@ services:
     volumes:
       - ./quiz-generator-service:/app
     env_file:
-    - .env
+      - .env
     profiles:
       - test
-
-  frontend-debug:
-    build:
-      context: frontend
-      dockerfile: debug.Dockerfile
-    env_file:
-    - .env
-    networks:
-      - net
-    profiles:
-      - debug
-    depends_on:
-      backend-debug:
-        condition: service_started
     
   redis:
     image: redis:7.2.1

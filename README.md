@@ -58,6 +58,11 @@ Go to the project directory
   cd lang-learn-quiz-bot
 ```
 
+Build java-based projects containers
+```bash
+ mvn clean compile jib:dockerBuild
+```
+
 Run docker compose in debug mode (currently only debug available)
 
 ```bash
@@ -65,6 +70,11 @@ Run docker compose in debug mode (currently only debug available)
 ```
 
 ## Test
+
+Build java-based projects containers
+```bash
+ mvn clean compile jib:dockerBuild
+```
 
 ```bash
   cd lang-learn-quiz-bot
